@@ -1,0 +1,24 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: eureka-server
+  security:
+    user:
+      # 配置spring security登录用户名和密码
+      name: root
+      password: root
+
+eureka:
+  client:
+    # 注册到Eureka的注册中心
+    register-with-eureka: false
+    # 获取注册实例列表
+    fetch-registry: false
+  server:
+    # 缓存同步定时任务时间
+    response-cache-update-interval-ms: 3000
+    response-cache-auto-expiration-in-seconds: 180
+    # 主动失效检测 50s
+    eviction-interval-timer-in-ms: 5000

@@ -1,0 +1,54 @@
+# 网关服务端口
+server:
+  port: 9000
+
+spring:
+  application:
+    name: api-gateway
+  datasource:  # mysql数据库配置
+    driver-class-name: com.mysql.jdbc.Driver
+    username: xxx
+    password: xxx
+    url: jdbc:mysql://xxx
+  cloud:  # 微服务配置
+    gateway:
+      routes:
+        - id: neo4j-service
+          uri: lb://NEO4J-SERVICE  # 后端服务名
+          predicates:
+            - Path=/neo4j-service/**   # 路由地址
+          filters:
+            - name: AuthenticationFilter  # 身份认证
+            - StripPrefix=1 # 去掉前缀
+        - id: user-service
+          uri: lb://USER-SERVICE  # 后端服务名
+          predicates:
+            - Path=/user-service/**   # 路由地址
+          filters:
+            - name: AuthenticationFilter  # 身份认证
+            - StripPrefix=1 # 去掉前缀
+
+# 服务注册中心
+eureka:
+  client:
+    # 注册到Eureka的注册中心
+    register-with-eureka: true
+    # 获取注册实例列表
+    fetch-registry: true
+    # 30s重新从服务中心获取实例列表
+    registry-fetch-interval-seconds: 60
+    service-url:
+      # 配置注册中心地址
+      defaultZone: http://root:root@localhost:8001/eureka/
+
+# 开启负载均衡
+ribbon:
+  eureka:
+    enabled: true
+
+# actuator监控指标
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

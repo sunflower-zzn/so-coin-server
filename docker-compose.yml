@@ -1,0 +1,39 @@
+eureka-server:
+  image: so-coin/eureka-server:1.0
+  hostname: localhost
+  ports:
+    - 8001:8001
+  environment:
+    - spring.profiles.active=application
+
+api-gateway:
+  image: so-coin/api-gateway:1.0
+  hostname: localhost
+  links:
+    - eureka-server:eureka-server
+    - neo4j-service:neo4j-service
+    - user-service:user-service
+  ports:
+    - 9000:9000
+  environment:
+    - spring.profiles.active=application
+
+user-service:
+  image: so-coin/user-service:1.0
+  hostname: localhost
+  links:
+    - eureka-server:eureka-server
+  ports:
+    - 8102:8102
+  environment:
+    - spring.profiles.active=application
+
+neo4j-service:
+  image: so-coin/neo4j-service:1.0
+  hostname: localhost
+  links:
+    - eureka-server:eureka-server
+  ports:
+    - 8101:8101
+  environment:
+    - spring.profiles.active=application
